@@ -13,23 +13,18 @@ class LargeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 32,
+    return RaisedButton(
+      onPressed: onPressed,
+      padding: EdgeInsets.symmetric(
+        vertical: 16,
       ),
-      child: RaisedButton(
-        onPressed: onPressed,
-        padding: EdgeInsets.symmetric(
-          vertical: 16,
-        ),
-        elevation: 0.75,
-        color: color,
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
+      elevation: 0.75,
+      color: color,
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
         ),
       ),
     );
