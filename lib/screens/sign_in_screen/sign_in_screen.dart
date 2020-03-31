@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/colors.dart';
+import 'package:movie_app/screens/sign_up_screen/sign_up_screen.dart';
 import 'package:movie_app/widgets/input_separator.dart';
 import 'package:movie_app/widgets/large_button.dart';
 
@@ -12,6 +15,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final _passwordFocusNode = FocusNode();
   bool _isChecked = true;
   @override
   Widget build(BuildContext context) {
@@ -44,35 +48,67 @@ class _SignInScreenState extends State<SignInScreen> {
                 SizedBox(
                   height: 40,
                 ),
-                TextField(
-                  keyboardType: TextInputType.text,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    hintText: 'Username',
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 18,
-                    ),
-                    prefixIcon: Icon(Icons.person_outline),
-                    focusColor: kColorFocusInput,
-                    fillColor: kInputBackgroundColor,
-                    filled: true,
-                  ),
-                ),
-                InputSeparator(),
-                TextField(
-                  keyboardType: TextInputType.text,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    hintText: 'Password',
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 18,
-                    ),
-                    prefixIcon: Icon(Icons.pan_tool),
-                    focusColor: kColorFocusInput,
-                    fillColor: kInputBackgroundColor,
-                    filled: true,
+                Form(
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        keyboardType: TextInputType.text,
+                        textAlign: TextAlign.center,
+                        cursorColor: kColorFocusInput,
+                        onFieldSubmitted: (_) {
+                          FocusScope.of(context)
+                              .requestFocus(_passwordFocusNode);
+                        },
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          hintText: 'Username',
+                          border: InputBorder.none,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: kColorFocusInput,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 18,
+                            horizontal: 18,
+                          ),
+                          prefixIcon: Icon(Icons.person_outline),
+                          focusColor: kColorFocusInput,
+                          fillColor: kInputBackgroundColor,
+                          filled: true,
+                        ),
+                      ),
+                      InputSeparator(),
+                      TextFormField(
+                        keyboardType: TextInputType.text,
+                        obscureText: true,
+                        textAlign: TextAlign.center,
+                        cursorColor: kColorFocusInput,
+                        focusNode: _passwordFocusNode,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          hintText: 'Password',
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: kColorFocusInput,
+                            ),
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 18,
+                            horizontal: 18,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.https,
+                          ),
+                          focusColor: kColorFocusInput,
+                          fillColor: kInputBackgroundColor,
+                          filled: true,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 InputSeparator(),
@@ -95,15 +131,22 @@ class _SignInScreenState extends State<SignInScreen> {
                       },
                       child: Row(
                         children: <Widget>[
-                          Checkbox(
-                            value: _isChecked,
-                            checkColor: kWhite,
-                            activeColor: kInputBackgroundColor,
-                            onChanged: (bool newVal) {
-                              setState(() {
-                                _isChecked = newVal;
-                              });
-                            },
+                          SizedBox(
+                            child: Checkbox(
+                              value: _isChecked,
+                              checkColor: kWhite,
+                              activeColor: Color(0xFF948E8E),
+                              onChanged: (bool newVal) {
+                                setState(() {
+                                  _isChecked = newVal;
+                                });
+                              },
+                            ),
+                            height: 24,
+                            width: 24,
+                          ),
+                          SizedBox(
+                            width: 14,
                           ),
                           Text(
                             'Remenber',
@@ -117,13 +160,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        //TODO:
+                        Navigator.of(context).pushNamed(SignUpScreen.routeName);
                       },
                       child: Text(
                         'Sign Up',
                         style: TextStyle(
                           color: Color(0xFFAAA5A5),
-                          fontSize: 15,
+                          fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
