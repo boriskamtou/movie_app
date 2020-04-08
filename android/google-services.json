@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "162444968636",
+    "firebase_url": "https://moovies-cb594.firebaseio.com",
+    "project_id": "moovies-cb594",
+    "storage_bucket": "moovies-cb594.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162444968636:android:cf1cd83414b721ac4cc6b9",
+        "android_client_info": {
+          "package_name": "com.boriskamtou.movie_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "162444968636-t66f7julpteqegeohpmgpc74v7kaji7l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu0O3yN_aqW0wMjrTTpaopiBfWcdiTzC8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "162444968636-t66f7julpteqegeohpmgpc74v7kaji7l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

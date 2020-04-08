@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/colors.dart';
 import 'package:movie_app/constants/styles.dart';
+import 'package:movie_app/providers/auth.dart';
 import 'package:movie_app/screens/about_user_screen/about_user_screen.dart';
 import 'package:movie_app/widgets/background_orange.dart';
 import 'package:movie_app/widgets/input_separator.dart';
 import 'package:movie_app/widgets/large_button.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   static const routeName = '/sign-up-screen';
@@ -15,7 +17,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  TextEditingController _controllerName = TextEditingController();
+  final _form = GlobalKey<FormState>();
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerPassword = TextEditingController();
   TextEditingController _controllerRetypePassword = TextEditingController();
@@ -27,10 +29,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void dispose() {
     super.dispose();
-    _controllerName.dispose();
     _controllerEmail.dispose();
     _controllerPassword.dispose();
     _controllerRetypePassword.dispose();
+  }
+
+  void _saveForm() {
+    final isFormValid = _form.currentState.validate();
+
+    if (!isFormValid) {
+      return;
+    }
+    Provider.of<Auth>(context, listen: false).signup(_controllerEmail.text, _controllerPassword.text);
+    _form.currentState.save();
   }
 
   @override
@@ -76,29 +87,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             height: 80,
                           ),
                           Form(
+                            key: _form,
                             child: Column(
                               children: <Widget>[
-                                TextFormField(
-                                  controller: _controllerName,
-                                  textAlign: TextAlign.end,
-                                  keyboardType: TextInputType.text,
-                                  cursorColor: kColorFocusInput,
-                                  textInputAction: TextInputAction.next,
-                                  onFieldSubmitted: (_) {
-                                    FocusScope.of(context)
-                                        .requestFocus(_emailFocusNode);
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: 'Name',
-                                    hintStyle: kStyleInsideInputSignUp,
-                                    prefixIcon: Icon(Icons.person_outline),
-                                    focusedBorder: kFocusBorder,
-                                    border: OutlineInputBorder(
-                                      borderSide: kBorderSideInputSignUp,
-                                    ),
-                                  ),
-                                ),
-                                InputSeparator(),
                                 TextFormField(
                                   controller: _controllerEmail,
                                   textAlign: TextAlign.end,
@@ -106,6 +97,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   cursorColor: kColorFocusInput,
                                   focusNode: _emailFocusNode,
                                   textInputAction: TextInputAction.next,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please provide an email';
+                                    }
+                                    if (!value.contains('@')) {
+                                      return 'Please provide a valid email';
+                                    }
+                                    return null;
+                                  },
                                   onFieldSubmitted: (_) {
                                     FocusScope.of(context)
                                         .requestFocus(_passwordFocusNode);
@@ -128,6 +128,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   obscureText: true,
                                   cursorColor: kColorFocusInput,
                                   focusNode: _passwordFocusNode,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please provide a pssword';
+                                    }
+                                    if (value.length < 8) {
+                                      return 'At least 8 characters';
+                                    }
+                                    return null;
+                                  },
                                   onFieldSubmitted: (_) {
                                     FocusScope.of(context)
                                         .requestFocus(_retypePasswordFocusNode);
@@ -151,6 +160,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   obscureText: true,
                                   cursorColor: kColorFocusInput,
                                   focusNode: _retypePasswordFocusNode,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please provide a pssword';
+                                    }
+                                    if (value.length < 8) {
+                                      return 'At least 8 characters';
+                                    }
+                                    return null;
+                                  },
                                   textInputAction: TextInputAction.done,
                                   decoration: InputDecoration(
                                     hintText: 'Re-type Password',
@@ -170,8 +188,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             text: 'Sign Up',
                             onPressed: () {
                               //TODO:
-                              Navigator.of(context)
-                                  .pushNamed(AboutUserScreen.routeName);
+                            _saveForm();
                             },
                           )
                         ],

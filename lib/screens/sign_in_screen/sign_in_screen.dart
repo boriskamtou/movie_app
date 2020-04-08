@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/colors.dart';
+import 'package:movie_app/constants/styles.dart';
 import 'package:movie_app/screens/sign_up_screen/sign_up_screen.dart';
 import 'package:movie_app/widgets/input_separator.dart';
 import 'package:movie_app/widgets/large_button.dart';
@@ -16,18 +17,20 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _passwordFocusNode = FocusNode();
+  final _form = GlobalKey<FormState>();
   bool _isChecked = true;
+
+  void _savedForm() {
+    _form.currentState.save();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
-          padding: EdgeInsets.only(
-            top: 50,
-            left: 32,
-            right: 32,
-          ),
+          padding: EdgeInsets.only(top: 50, left: 32, right: 32),
           child: Container(
             width: double.infinity,
             child: Column(
@@ -49,6 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 40,
                 ),
                 Form(
+                  key: _form,
                   child: Column(
                     children: <Widget>[
                       TextFormField(
@@ -60,24 +64,13 @@ class _SignInScreenState extends State<SignInScreen> {
                               .requestFocus(_passwordFocusNode);
                         },
                         textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
+                        decoration: kInputDecorator.copyWith(
                           hintText: 'Username',
-                          border: InputBorder.none,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: kColorFocusInput,
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 18,
-                            horizontal: 18,
-                          ),
                           prefixIcon: Icon(Icons.person_outline),
-                          focusColor: kColorFocusInput,
-                          fillColor: kInputBackgroundColor,
-                          filled: true,
                         ),
+                        onSaved: (value) {
+                         
+                        },
                       ),
                       InputSeparator(),
                       TextFormField(
@@ -87,26 +80,11 @@ class _SignInScreenState extends State<SignInScreen> {
                         cursorColor: kColorFocusInput,
                         focusNode: _passwordFocusNode,
                         textInputAction: TextInputAction.done,
-                        decoration: InputDecoration(
-                          hintText: 'Password',
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: kColorFocusInput,
-                            ),
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 18,
-                            horizontal: 18,
-                          ),
-                          prefixIcon: Icon(
-                            Icons.https,
-                          ),
-                          focusColor: kColorFocusInput,
-                          fillColor: kInputBackgroundColor,
-                          filled: true,
-                        ),
+                        decoration: kInputDecorator,
+                        onSaved: (value) {
+                        
+                          
+                        },
                       ),
                     ],
                   ),
@@ -116,7 +94,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   width: double.infinity,
                   child: LargeButton(
                     text: 'GO',
-                    onPressed: () {},
+                    onPressed: () {
+                      _savedForm();
+                    },
                   ),
                 ),
                 InputSeparator(),
