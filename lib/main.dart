@@ -20,20 +20,22 @@ class MyApp extends StatelessWidget {
           value: Auth(),
         )
       ],
-      child: MaterialApp(
-        title: 'Movie App',
-        theme: ThemeData(
-          primaryColor: Color(0xFF575656),
-          scaffoldBackgroundColor: Colors.white,
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) => MaterialApp(
+          title: 'Movie App',
+          theme: ThemeData(
+            primaryColor: Color(0xFF575656),
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          home: auth.isAuth ? MenuScreen() : HomeScreen(),
+          routes: {
+            HomeScreen.routeName: (ctx) => HomeScreen(),
+            SignInScreen.routeName: (ctx) => SignInScreen(),
+            SignUpScreen.routeName: (ctx) => SignUpScreen(),
+            AboutUserScreen.routeName: (ctx) => AboutUserScreen(),
+            MenuScreen.routeName: (ctx) => MenuScreen(),
+          },
         ),
-        home: HomeScreen(),
-        routes: {
-          HomeScreen.routeName: (ctx) => HomeScreen(),
-          SignInScreen.routeName: (ctx) => SignInScreen(),
-          SignUpScreen.routeName: (ctx) => SignUpScreen(),
-          AboutUserScreen.routeName: (ctx) => AboutUserScreen(),
-          MenuScreen.routeName: (ctx) => MenuScreen(),
-        },
       ),
     );
   }
