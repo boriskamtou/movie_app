@@ -18,7 +18,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final _form = GlobalKey<FormState>();
+  final GlobalKey<FormState> _form = GlobalKey();
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerPassword = TextEditingController();
   TextEditingController _controllerRetypePassword = TextEditingController();
@@ -50,15 +50,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _isLoading = true;
     });
 
-
     try {
       await Provider.of<Auth>(context, listen: false)
-          .signup(_controllerEmail.text, _controllerPassword.text)
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
+          .signup(_controllerEmail.text, _controllerPassword.text);
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_EXISTS')) {
@@ -68,12 +62,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       } else if (error.toString().contains('WEAK_PASSWORD')) {
         errorMessage = 'This password is too weak.';
       }
-     print(errorMessage);
+      print(errorMessage);
     } catch (error) {
       const errorMessage =
           'Could not authenticate you. Please try again later.';
-          print(errorMessage);
+      print(errorMessage);
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -200,6 +197,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       }
                                       if (value.length < 8) {
                                         return 'At least 8 characters';
+                                      }
+                                      if(value != _controllerPassword.text){
+                                        return 'Password doesn\' match';
                                       }
                                       return null;
                                     },

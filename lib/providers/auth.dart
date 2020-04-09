@@ -13,7 +13,7 @@ class Auth with ChangeNotifier {
     return _token != null;
   }
 
-   String get token {
+  String get token {
     if (_expiryDate != null &&
         _expiryDate.isAfter(DateTime.now()) &&
         _token != null) {
@@ -30,16 +30,17 @@ class Auth with ChangeNotifier {
 
       final response = await http.post(
         url,
-        body: jsonEncode(<String, String>{
+        body: jsonEncode(<String, dynamic>{
           'email': email,
           'password': password,
+          'returnSecureToken': true,
         }),
       );
 
       final responseData = json.decode(response.body);
 
       if (responseData['error'] != null) {
-        throw HttpException(message: 'Error sign up');
+        throw HttpException(message: responseData['error']['mesage']);
       }
 
       _token = responseData['idToken'];
@@ -64,6 +65,6 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signin(String email, String password) async {
-    return _authenticate(email, password, 'signInWithIdp');
+    return _authenticate(email, password, 'signInWithPassword');
   }
 }

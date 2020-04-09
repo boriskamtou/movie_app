@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -21,7 +22,7 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _passwordFocusNode = FocusNode();
-  final _form = GlobalKey<FormState>();
+  final GlobalKey<FormState> _form = GlobalKey();
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -41,18 +42,13 @@ class _SignInScreenState extends State<SignInScreen> {
     });
     try {
       await Provider.of<Auth>(context, listen: false)
-          .signin(_emailController.text, _passwordController.text)
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
+          .signin(_emailController.text, _passwordController.text);
     } on HttpException catch (error) {
       var errorMessage = 'Login failed';
       if (error.toString().contains('EMAIL_NOT_FOUND')) {
-        errorMessage = 'Could not find a user with that email.';
+        errorMessage = 'Email not found';
       } else if (error.toString().contains('INVALID_PASSWORD')) {
-        errorMessage = 'Invalid password.';
+        errorMessage = 'Invalid password';
       } else if (error.toString().contains('USER_DISABLED')) {
         errorMessage = 'This account has been disable';
       }
@@ -60,8 +56,11 @@ class _SignInScreenState extends State<SignInScreen> {
     } catch (error) {
       const errorMessage =
           'Could not authenticate you. Please try again later.';
-          print(errorMessage);
+      print(errorMessage);
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -102,7 +101,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       children: <Widget>[
                         TextFormField(
                           controller: _emailController,
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.emailAddress,
                           textAlign: TextAlign.center,
                           cursorColor: kColorFocusInput,
                           validator: (value) {
@@ -120,7 +119,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           },
                           textInputAction: TextInputAction.next,
                           decoration: kInputDecorator.copyWith(
-                            hintText: 'Username',
+                            hintText: 'Email',
                             prefixIcon: Icon(Icons.person_outline),
                           ),
                           onSaved: (value) {},
@@ -153,9 +152,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     width: double.infinity,
                     child: LargeButton(
                       text: 'GO',
-                      onPressed: () {
-                        _savedForm();
-                      },
+                      onPressed: () => _savedForm(),
                     ),
                   ),
                   InputSeparator(),
